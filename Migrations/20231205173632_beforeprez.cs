@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace WeSyncBackend.Migrations
 {
     /// <inheritdoc />
-    public partial class refactordbdriver : Migration
+    public partial class beforeprez : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

@@ -9,8 +9,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace WeSyncBackend.Migrations
 {
     [DbContext(typeof(FisierDb))]
-    [Migration("20231205140047_refactor dbdriver")]
-    partial class refactordbdriver
+    [Migration("20231205173632_beforeprez")]
+    partial class beforeprez
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
