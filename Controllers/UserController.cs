@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Data.Entity;
 using WeSyncBackend.Dtos;
+using WeSyncBackend.Models;
 
 namespace WeSyncBackend.Controllers
 {
@@ -25,6 +26,15 @@ namespace WeSyncBackend.Controllers
                 return NotFound();
             }
             return _context.Users.Select(x => new UserDto(x)).ToList();
+        }
+
+        [HttpGet("getOne")]
+        public async Task<ActionResult<UserDto>> GetOne(string email)
+        {
+            await Task.CompletedTask;
+            var user =  _context.Users.FirstOrDefault(u => u.Email == email);
+            if (user == null) return NotFound();
+            return Ok(user);
         }
 
         [HttpPost("register")]
