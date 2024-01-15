@@ -57,7 +57,7 @@ namespace WeSyncBackend.Controllers
             return Ok();
         }
 
-        [HttpGet("login")]
+        [HttpPost("login")]
         public async Task<ActionResult> Login(CredentialsDto credentials)
         {
             var user = await _context.Users.FirstOrDefaultAsync(el => el.Email == credentials.Email);
