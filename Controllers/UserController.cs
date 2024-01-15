@@ -66,7 +66,7 @@ namespace WeSyncBackend.Controllers
             bool ok = BCrypt.Net.BCrypt.Verify(credentials.Password, user.Password);
             if (!ok)
                 return NotFound();
-            return Ok();
+            return Ok(user);
         }
 
     }
