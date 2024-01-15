@@ -2,6 +2,17 @@ using Microsoft.EntityFrameworkCore;
 using System.Data.SQLite;
 
 var builder = WebApplication.CreateBuilder(args);
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("CorsPolicy",
+        builder => builder
+            .AllowAnyMethod()
+            .AllowCredentials()
+            .SetIsOriginAllowed((host) => true)
+            .AllowAnyHeader());
+});
+
+
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c => { c.EnableAnnotations(); });
@@ -15,21 +26,14 @@ if (!File.Exists(DbPath))
 }
 
 var connString = builder.Configuration.GetConnectionString("DefaultConnection");
-//var serverVersion = new MySqlServerVersion(new Version(8, 2, 0));
-builder.Services.AddDbContext<FisierDb>(opt => opt.UseSqlite($"Data Source={DbPath}"));
+builder.Services.AddDbContext<AppDbContext>(opt => opt.UseSqlite($"Data Source={DbPath}"));
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
-builder.Services.AddCors(options =>
-{
-    options.AddDefaultPolicy(
-        policy =>
-        {
-            policy.WithOrigins("https://localhost:7147",
-                                "http://localhost:5173");
-        });
-});
+
+
 
 var app = builder.Build();
+app.UseCors("CorsPolicy");
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -38,7 +42,6 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseCors();
 
 
 

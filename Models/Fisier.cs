@@ -2,8 +2,9 @@
 
 public class Fisier
 {
-    public int id { get; set; }
-    public string name { get; set; }
-    public long size { get; set; }
-    public byte[] content { get; set; }
+    public int Id { get; set; }
+    public string Name { get; set; } = string.Empty;
+    public long Size { get; set; }
+    public byte[] Content { get; set; } = new byte[0]; 
+    public string VirtualPath { get; set; } = string.Empty;
 }

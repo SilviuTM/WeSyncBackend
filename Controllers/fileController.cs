@@ -3,13 +3,13 @@ using Microsoft.EntityFrameworkCore;
 
 namespace WeSyncBackend.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/file")]
     [ApiController]
-    public class fileController : ControllerBase
+    public class FileController : ControllerBase
     {
-        private readonly FisierDb _context;
+        private readonly AppDbContext _context;
 
-        public fileController(FisierDb context)
+        public FileController(AppDbContext context)
         {
             _context = context;
         }
@@ -26,7 +26,7 @@ namespace WeSyncBackend.Controllers
         }
 
         // GET: api/file/5
-        [HttpGet("{id}")]
+        [HttpGet("{Id}")]
         public async Task<ActionResult> GetFisier(int id)
         {
           if (_context.Fisiers == null)
@@ -41,15 +41,15 @@ namespace WeSyncBackend.Controllers
             }
 
             // Return the file as a downloadable attachment
-            return File(fisier.content, "application/octet-stream", fisier.name);
+            return File(fisier.Content, "application/octet-stream", fisier.Name);
         }
 
         // PUT: api/file/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
+        [HttpPut("{Id}")]
         public async Task<IActionResult> PutFisier(int id, Fisier fisier)
         {
-            if (id != fisier.id)
+            if (id != fisier.Id)
             {
                 return BadRequest();
             }
@@ -82,19 +82,19 @@ namespace WeSyncBackend.Controllers
         {
             if (_context.Fisiers == null)
             {
-                return Problem("Entity set 'FisierDb.Fisiers'  is null.");
+                return Problem("Entity set 'AppDbContext.Fisiers'  is null.");
             }
             
             foreach (IFormFile file in fisiers)
             {
                 Fisier fisier = new()
                 {
-                    name = file.FileName,
-                    size = file.Length
+                    Name = file.FileName,
+                    Size = file.Length
                 };
 
-                fisier.content = new byte[file.Length];
-                MemoryStream ms = new(fisier.content);
+                fisier.Content = new byte[file.Length];
+                MemoryStream ms = new(fisier.Content);
                 file.CopyTo(ms);
                 
                 _context.Fisiers.Add(fisier);
@@ -107,7 +107,7 @@ namespace WeSyncBackend.Controllers
         }
 
         // DELETE: api/file/5
-        [HttpDelete("{id}")]
+        [HttpDelete("{Id}")]
         public async Task<IActionResult> DeleteFisier(int id)
         {
             if (_context.Fisiers == null)
@@ -128,7 +128,7 @@ namespace WeSyncBackend.Controllers
 
         private bool FisierExists(int id)
         {
-            return (_context.Fisiers?.Any(e => e.id == id)).GetValueOrDefault();
+            return (_context.Fisiers?.Any(e => e.Id == id)).GetValueOrDefault();
         }
     }
 }

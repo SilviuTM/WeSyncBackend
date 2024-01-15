@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace WeSyncBackend.Migrations
 {
-    [DbContext(typeof(FisierDb))]
+    [DbContext(typeof(AppDbContext))]
     [Migration("20240115191442_newMovedToSqlite")]
     partial class newMovedToSqlite
     {
@@ -20,22 +20,22 @@ namespace WeSyncBackend.Migrations
 
             modelBuilder.Entity("Fisier", b =>
                 {
-                    b.Property<int>("id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<byte[]>("content")
+                    b.Property<byte[]>("Content")
                         .IsRequired()
                         .HasColumnType("BLOB");
 
-                    b.Property<string>("name")
+                    b.Property<string>("N\ame")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<long>("size")
+                    b.Property<long>("Size")
                         .HasColumnType("INTEGER");
 
-                    b.HasKey("id");
+                    b.HasKey("Id");
 
                     b.ToTable("Fisiers");
                 });
