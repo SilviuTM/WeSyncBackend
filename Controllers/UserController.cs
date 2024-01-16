@@ -60,7 +60,8 @@ namespace WeSyncBackend.Controllers
         [HttpPost("login")]
         public async Task<ActionResult> Login(CredentialsDto credentials)
         {
-            var user = await _context.Users.FirstOrDefaultAsync(el => el.Email == credentials.Email);
+            await Task.CompletedTask;
+            var user =  _context.Users.FirstOrDefault(el => el.Email == credentials.Email);
             if (user == null)
                 return NotFound();
             bool ok = BCrypt.Net.BCrypt.Verify(credentials.Password, user.Password);

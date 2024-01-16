@@ -78,7 +78,7 @@ namespace WeSyncBackend.Controllers
         // POST: api/file
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Fisier>> PostFisier(IEnumerable<IFormFile> fisiers)
+        public async Task<ActionResult<Fisier>> PostFisier(IEnumerable<IFormFile> fisiers, [FromForm] string Owner)
         {
             if (_context.Fisiers == null)
             {
@@ -90,7 +90,8 @@ namespace WeSyncBackend.Controllers
                 Fisier fisier = new()
                 {
                     Name = file.FileName,
-                    Size = file.Length
+                    Size = file.Length,
+                    Owner = Owner
                 };
 
                 fisier.Content = new byte[file.Length];
@@ -123,7 +124,7 @@ namespace WeSyncBackend.Controllers
             _context.Fisiers.Remove(fisier);
             await _context.SaveChangesAsync();
 
-            return NoContent();
+            return Ok();
         }
 
         private bool FisierExists(int id)
