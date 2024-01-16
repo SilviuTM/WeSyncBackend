@@ -31,10 +31,10 @@ namespace WeSyncBackend.Controllers
             }
             else
             {
-                return await _context.Fisiers
+                return _context.Fisiers
                     .Where(el => el.VirtualPath.Trim('/').Equals(path.Trim('/')))
                     .Select(x => new FisierDTO(x))
-                    .ToListAsync();
+                    .ToList();
             }
         }
 
