@@ -7,6 +7,7 @@
         size = f.Size;
         virtualPath = f.VirtualPath;
         ExpirationTime = f.ExpirationTime;
+        Owner = f.Owner;
     }
 
     public int id { get; set; }
@@ -14,4 +15,5 @@
     public long size { get; set; }
     public string virtualPath { get; set; }
     public DateTime? ExpirationTime { get; set; }
+    public string Owner { get; set; }
 }

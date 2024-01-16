@@ -19,23 +19,29 @@ namespace WeSyncBackend.Controllers
 
         // GET: api/file
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<FisierDTO>>> GetFisiers(string? path)
+        public async Task<ActionResult<IEnumerable<FisierDTO>>> GetFisiers(string? path, string? userMail)
         {
-          if (_context.Fisiers == null)
-          {
-              return NotFound();
-          }
-            if (string.IsNullOrEmpty(path))
+            if (_context.Fisiers == null)
             {
-                return _context.Fisiers.Select(x => new FisierDTO(x)).ToList();
+                return NotFound();
             }
+
+            List<FisierDTO> list;
+
+            if (string.IsNullOrEmpty(path))
+                list = _context.Fisiers.Select(x => new FisierDTO(x)).ToList();
             else
             {
-                return _context.Fisiers
+                list = _context.Fisiers
                     .Where(el => el.VirtualPath.Trim('/').Equals(path.Trim('/')))
                     .Select(x => new FisierDTO(x))
                     .ToList();
             }
+
+            if (string.IsNullOrEmpty(userMail))
+                return list;
+            else
+                return list.Where(f => f.Owner == userMail).ToList();
         }
 
         // GET: api/file/5
@@ -55,20 +61,6 @@ namespace WeSyncBackend.Controllers
 
             // Return the file as a downloadable attachment
             return File(fisier.Content, "application/octet-stream", fisier.Name);
-        }
-
-        [HttpGet("byUserEmail/{userEmail}")]
-        public async Task<ActionResult<IEnumerable<FisierDTO>>> GetFisiersByUserEmail(string userEmail)
-        {
-            if (_context.Fisiers == null)
-            {
-                return NotFound();
-            }
-
-            return _context.Fisiers
-                .Where(f => f.Owner == userEmail)
-                .Select(x => new FisierDTO(x))
-                .ToList();
         }
 
         [HttpPost("folder")]
