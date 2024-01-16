@@ -1,5 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.CodeAnalysis.Operations;
 using Microsoft.EntityFrameworkCore;
+using System.Data.Entity;
+using WeSyncBackend.Dtos;
 
 namespace WeSyncBackend.Controllers
 {
@@ -16,13 +19,23 @@ namespace WeSyncBackend.Controllers
 
         // GET: api/file
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<FisierDTO>>> GetFisiers()
+        public async Task<ActionResult<IEnumerable<FisierDTO>>> GetFisiers(string? path)
         {
           if (_context.Fisiers == null)
           {
               return NotFound();
           }
-            return await _context.Fisiers.Select(x => new FisierDTO(x)).ToListAsync();
+            if (string.IsNullOrEmpty(path))
+            {
+                return await _context.Fisiers.Select(x => new FisierDTO(x)).ToListAsync();
+            }
+            else
+            {
+                return await _context.Fisiers
+                    .Where(el => el.VirtualPath.Trim('/').Equals(path.Trim('/')))
+                    .Select(x => new FisierDTO(x))
+                    .ToListAsync();
+            }
         }
 
         // GET: api/file/5
@@ -44,54 +57,45 @@ namespace WeSyncBackend.Controllers
             return File(fisier.Content, "application/octet-stream", fisier.Name);
         }
 
-        // PUT: api/file/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{Id}")]
-        public async Task<IActionResult> PutFisier(int id, Fisier fisier)
+        [HttpPost("folder")]
+        public async Task<ActionResult> CreateFolder(CreateFolderReq req)
         {
-            if (id != fisier.Id)
+            Fisier fisier = new()
             {
-                return BadRequest();
-            }
+                Name = req.folderName + ".dir",
+                Size = 0,
+                Owner = req.Owner,
+                VirtualPath = req.Virtualpath
+            };
+            _context.Fisiers.Add(fisier);
+            await _context.SaveChangesAsync();
+            return Ok();
+    }
 
-            _context.Entry(fisier).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!FisierExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
-        }
 
         // POST: api/file
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Fisier>> PostFisier(IEnumerable<IFormFile> fisiers, [FromForm] string Owner)
+        public async Task<ActionResult<Fisier>> PostFisier(IEnumerable<IFormFile> fisiers, [FromForm] string Owner, [FromForm] string VirtualPath)
         {
             if (_context.Fisiers == null)
             {
                 return Problem("Entity set 'AppDbContext.Fisiers'  is null.");
             }
+
             
             foreach (IFormFile file in fisiers)
             {
+
+                if (file.Name.EndsWith(".dir"))
+                    continue;
+
                 Fisier fisier = new()
                 {
                     Name = file.FileName,
                     Size = file.Length,
-                    Owner = Owner
+                    Owner = Owner,
+                    VirtualPath = VirtualPath
                 };
 
                 fisier.Content = new byte[file.Length];
@@ -127,9 +131,5 @@ namespace WeSyncBackend.Controllers
             return Ok();
         }
 
-        private bool FisierExists(int id)
-        {
-            return (_context.Fisiers?.Any(e => e.Id == id)).GetValueOrDefault();
-        }
     }
 }
