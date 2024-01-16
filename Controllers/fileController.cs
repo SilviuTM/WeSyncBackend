@@ -27,7 +27,7 @@ namespace WeSyncBackend.Controllers
           }
             if (string.IsNullOrEmpty(path))
             {
-                return await _context.Fisiers.Select(x => new FisierDTO(x)).ToListAsync();
+                return _context.Fisiers.Select(x => new FisierDTO(x)).ToList();
             }
             else
             {
