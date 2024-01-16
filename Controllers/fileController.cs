@@ -57,6 +57,20 @@ namespace WeSyncBackend.Controllers
             return File(fisier.Content, "application/octet-stream", fisier.Name);
         }
 
+        [HttpGet("byUserEmail/{userEmail}")]
+        public async Task<ActionResult<IEnumerable<FisierDTO>>> GetFisiersByUserEmail(string userEmail)
+        {
+            if (_context.Fisiers == null)
+            {
+                return NotFound();
+            }
+
+            return _context.Fisiers
+                .Where(f => f.Owner == userEmail)
+                .Select(x => new FisierDTO(x))
+                .ToList();
+        }
+
         [HttpPost("folder")]
         public async Task<ActionResult> CreateFolder(CreateFolderReq req)
         {

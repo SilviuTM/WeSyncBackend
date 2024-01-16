@@ -10,5 +10,7 @@ public class Fisier
     public byte[] Content { get; set; } = new byte[0]; 
     public string VirtualPath { get; set; } = string.Empty;
 
+    public DateTime ExpirationTime { get; set; } = DateTime.Now;
+
     public List<User> Users { get; set; } = new List<User>();
 }

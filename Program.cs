@@ -16,6 +16,7 @@ builder.Services.AddCors(options =>
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c => { c.EnableAnnotations(); });
+builder.Services.AddHostedService<FileCleanupService>();
 
 
 string startupPath = Directory.GetCurrentDirectory();
