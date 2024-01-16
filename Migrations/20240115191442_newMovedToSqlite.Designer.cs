@@ -8,36 +8,34 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace WeSyncBackend.Migrations
 {
-    [DbContext(typeof(FisierDb))]
-    [Migration("20231205173632_beforeprez")]
-    partial class beforeprez
+    [DbContext(typeof(AppDbContext))]
+    [Migration("20240115191442_newMovedToSqlite")]
+    partial class newMovedToSqlite
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
-            modelBuilder
-                .HasAnnotation("ProductVersion", "7.0.14")
-                .HasAnnotation("Relational:MaxIdentifierLength", 64);
+            modelBuilder.HasAnnotation("ProductVersion", "7.0.14");
 
             modelBuilder.Entity("Fisier", b =>
                 {
-                    b.Property<int>("id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("INTEGER");
 
-                    b.Property<byte[]>("content")
+                    b.Property<byte[]>("Content")
                         .IsRequired()
-                        .HasColumnType("longblob");
+                        .HasColumnType("BLOB");
 
-                    b.Property<string>("name")
+                    b.Property<string>("N\ame")
                         .IsRequired()
-                        .HasColumnType("longtext");
+                        .HasColumnType("TEXT");
 
-                    b.Property<long>("size")
-                        .HasColumnType("bigint");
+                    b.Property<long>("Size")
+                        .HasColumnType("INTEGER");
 
-                    b.HasKey("id");
+                    b.HasKey("Id");
 
                     b.ToTable("Fisiers");
                 });
